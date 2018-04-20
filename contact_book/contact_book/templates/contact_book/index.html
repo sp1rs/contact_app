@@ -1,0 +1,126 @@
+{% load staticfiles %}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="generator" content="Polymer Starter Kit">
+  <title>Experts Dashboard</title>
+
+  <!-- Place favicon.ico in the `app/` directory -->
+
+  <!-- Chrome for Android theme color -->
+  <meta name="theme-color" content="#ee4639">
+
+  <!-- Web Application Manifest -->
+  <link rel="manifest" href="{% static 'experts_dashboard/manifest.json' %}">
+
+  <!-- Tile color for Win8 -->
+  <meta name="msapplication-TileColor" content="#ee4639">
+
+  <!-- Add to homescreen for Chrome on Android -->
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="application-name" content="Hme Connect">
+  <link rel="icon" sizes="192x192"
+        href="{% static 'experts_dashboard/images/touch/chrome-touch-icon-192x192.png' %}">
+
+  <!-- Add to homescreen for Safari on iOS -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="HealthifyMe | Connect">
+  <link rel="apple-touch-icon"
+        href="{% static 'experts_dashboard/images/touch/apple-touch-icon.png' %}">
+
+  <!-- Tile icon for Win8 (144x144) -->
+  <meta name="msapplication-TileImage"
+        content="{% static 'experts_dashboard/images/touch/ms-touch-icon-144x144-precomposed.png' %}">
+
+  <!-- build:css styles/main.css -->
+  <link rel="stylesheet" href="{% static 'experts_dashboard/styles/main.css' %}">
+  <!-- endbuild-->
+
+  <script src="{% static 'jquery/jquery.min.js' %}"></script>
+  <script src="{% static 'progressbar.js/dist/progressbar.min.js' %}"></script>
+
+  <!-- build:js bower_components/webcomponentsjs/webcomponents-lite.min.js -->
+  <script>
+
+    // setup Polymer options
+    window.Polymer = {lazyRegister: true, dom: 'shadow'};
+
+    // load webcomponents polyfills
+    (function() {
+      if ('registerElement' in document
+              && 'import' in document.createElement('link')
+              && 'content' in document.createElement('template')) {
+        // browser has web components
+      } else {
+        // polyfill web components
+        var e = document.createElement('script');
+        e.src = '/static/webcomponentsjs/webcomponents-lite.min.js';
+        document.head.appendChild(e);
+      }
+    })();
+  </script>
+
+  <!-- Adding clevertap script -->
+
+  <script type="text/javascript">
+      var clevertap = {event:[], profile:[], account:[], onUserLogin:[], notifications:[]};
+      clevertap.account.push({"id": {{ app_info|safe }}.clevertap_account_id });
+      (function () {
+           var wzrk = document.createElement('script');
+           wzrk.type = 'text/javascript';
+           wzrk.async = true;
+           wzrk.src = ('https:' == document.location.protocol ? 'https://d2r1yp2w7bby2u.cloudfront.net' : 'http://static.clevertap.com') + '/js/a.js';
+           var s = document.getElementsByTagName('script')[0];
+           s.parentNode.insertBefore(wzrk, s);
+      })();
+  </script>
+
+
+  <!-- endbuild -->
+
+  <!-- Because this project uses vulcanize this should be your only html import
+       in this file. All other imports should go in elements.html -->
+  <link rel="import" href="{% static 'dist/html/experts_dashboard/elements.html' %}">
+  <link rel="manifest" href="{% static 'experts_dashboard/manifest.json' %}">
+  <!-- For shared styles, shared-styles.html import in elements.html -->
+  <style is="custom-style" include="shared-styles"></style>
+</head>
+<body unresolved>
+  <span id="browser-sync-binding"></span>
+  <div id="unsupportedBrowser">
+    <div><img src="/static/corporate/img/HME-logo.png"/></div>
+    <div id="unsupportedAgent">
+      Experts Dashboard is not supported in this browser. Please use Google Chrome v45 or above
+      or Firefox v44 or above for the dashboard to work. <br>
+      Download Chrome <a href="https://www.google.com/chrome/browser/">here</a>.
+      Download Firefox <a href="https://www.google.com/chrome/browser/">here</a>.
+    </div>
+    <div id="unsupportedVersion">
+      Experts Dashboard is not supported in this version of Browser. Please get the latest version (greater than v45)
+      <a href="https://support.google.com/chrome/answer/95414?co=GENIE.Platform%3DDesktop&hl=en">here (Chrome).</a>
+      <a href="https://support.mozilla.org/en-US/kb/update-firefox-latest-version">or here (Firefox).</a>
+    </div>
+    <br><br>
+    <small>
+      <span id="agentString"></span><br>
+    </small>
+  </div>
+  <div id="expertDashRoot">
+    <template is="dom-bind">
+      <expert-dash-container
+        id="dashContainer"
+        app-info-json="{{app_info}}"
+        expert-info-json="{{expert_info}}"
+        filters-json="{{filters}}"></expert-dash-container>
+    </template>
+  </div>
+  <script src="{% static 'progressbar.js/dist/progressbar.min.js' %}"></script>
+  <script src="{% static 'moment/min/moment.min.js' %}"></script>
+  <script src="{% static 'moment-timezone/builds/moment-timezone-with-data.min.js' %}"></script>
+  <script src="{% static 'js/main.js' %}"> </script>
+</body>
+</html>
