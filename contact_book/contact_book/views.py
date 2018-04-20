@@ -1,6 +1,9 @@
 import json
 
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
+from django.shortcuts import render
 
 from contact_book import constants
 from contact_book import exception
@@ -44,3 +47,16 @@ def list_contact(request, **kwargs):
     contact = private.Contact()
     data = contact.fetch_list(limit, offset)
     return JsonResponse({'objects': data})
+
+
+def simple_login(request):
+    username = request.POST.get('username')
+    password = request.POST.get('password')
+    user = authenticate(username=username, password=password)
+    if request.method == 'GET':
+        return render(request, 'contact_book/login.html')
+    if user:
+        login(request, user)
+        return render(request, 'contact_book/success.html')
+    else:
+        return render(request, 'contact_book/failure.html', {'username': username})
