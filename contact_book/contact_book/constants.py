@@ -8,3 +8,5 @@ DEFAULT_OFFSET = 0
 class PhoneNumberType(Enum):
     TYPE_HOME = 'home'
     TYPE_OFFICE = 'office'
+
+TRIE_FILE_PATH = './trie_search.marisa'
