@@ -28,6 +28,9 @@ It hosts 3 apis.
 ## Frontend.
 - Basic UI of **login screen** is done.
 
+## Trie
+- Added `marisa-trie` library to enhance search by name and email.
+
 ## further improvement.
 - `Search` api is not yet implemented.
 - `Frontend code` is not present.
