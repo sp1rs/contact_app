@@ -22,7 +22,7 @@
 It hosts 3 apis.
 - **`/contact/<contact_id>`** (POST/DELETE)- Update or delete the contact based on method.
 - **`/contact/`** (POST)- Create contact.
-- **`/contact/all` ** (GET)- List the paginated contacts.
+- **`/contact/all`** (GET)- List the paginated contacts.
 
 ## further improvement.
 - `Search` api is not yet implemented.
