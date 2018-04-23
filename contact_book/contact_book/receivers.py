@@ -3,8 +3,8 @@ from django.dispatch import receiver
 from django.utils import timezone
 
 from contact_book import constants
-from contact_book import models
 from contact_book import elastic_search
+from contact_book import models
 
 
 @receiver(post_save, sender=models.Contact)

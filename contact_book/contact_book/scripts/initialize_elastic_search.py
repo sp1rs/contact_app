@@ -1,8 +1,9 @@
+from contact_book import constants
 from contact_book import elastic_search
 
 
 def initialize_elasticsearch():
-    elastic_search.create_index('contact_manager')
+    elastic_search.create_index(constants.ELASTIC_SEARCH_INDEX)
     create_contact_mapping()
 
 
@@ -21,7 +22,7 @@ def create_contact_mapping():
         }
     }
     elastic_search.create_mapping(
-        index='contact_manager',
-        doc_type='contact',
+        index=constants.ELASTIC_SEARCH_INDEX,
+        doc_type=constants.ELASTIC_SEARCH_MAPPING,
         mapping_body=mapping
     )

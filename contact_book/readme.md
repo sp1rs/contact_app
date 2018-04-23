@@ -1,7 +1,7 @@
 ## Setup
 
 1. Clone the repo.
-`git clone git@github.com:sp1rs/contact_app.git`
+`$ git clone git@github.com:sp1rs/contact_app.git`
 
 2. Setup a virtual env with python2
 `mkvirtualenv --python=python2.7 contact-app-python2`
@@ -19,22 +19,33 @@
 - App which maintain contacts.
 
 ## REST APIs
-It hosts 3 apis.
+It exposes 3 apis.
 - **`/contact/<contact_id>`** (POST/DELETE)- Update or delete the contact based on method.
 - **`/contact/`** (POST)- Create contact.
-- **`/contact/all`** (GET)- List the paginated contacts.
-- **`/contact/login`** (GET)- Login api.
+- **`/contact/search?search_term=xyz`** (GET)- List the paginated contacts. And it uses elastic search to fetch the data.
 
-## Frontend.
-- Basic UI of **login screen** is done.
 
-## Trie
-- Added `marisa-trie` library to enhance search by name and email.
+## Elastic search.
+- This is used for implementing search based on `name` and `email`.
 
-## further improvement.
-- `Search` api is not yet implemented.
-- `Frontend code` is not present.
-- `Sign up` is not implemented.
+### Setup Elasticsearch
+
+##### For Mac
+
+- Download and unzip the package from https://www.elastic.co/downloads/elasticsearch
+- Go to the downloaded path and run elasticsearch:
+```
+$ bin/elasticsearch
+```
+
+#### To initialize elasticsearch.
+- Run this command in the shell.
+
+```
+>> from contact_book.scripts import initialize_elastic_search
+>> initialize_elastic_search.initialize_elasticsearch()
+```
+
 
 # Contributors
 - Shashank Parekh (sp1rs)
