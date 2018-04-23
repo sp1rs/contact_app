@@ -67,7 +67,7 @@ class ViewsTest(TestCase):
 
         # Case 1: Update the contact.
         contact1 = factoryboy.ContactFactory(name='abc')
-        url = reverse('update-contact', args=[contact1.id])
+        url = reverse('get-or-update-contact', args=[contact1.id])
         response = self.client.post(
             url,
             data=json.dumps({'name': 'def'}),
@@ -87,10 +87,35 @@ class ViewsTest(TestCase):
         self.assertEqual(contacts.count(), 0)
         self.assertEqual(response.json(), {'success_message': 'Contact updated successfully.'})
 
-        reverse('update-contact', args=[123123123])
+        reverse('get-or-update-contact', args=[123123123])
         response = self.client.post(
             url, data=json.dumps({'name': 'def'}), content_type='application/json',
             header={'HTTP_AUTHORIZATION': 'Basic ' + base64.b64encode(b'x@x.com:xyz123').decode("ascii")}
         )
         self.assertEqual(contacts.count(), 0)
         self.assertEqual(response.json(), {'error_message': 'Cannot update contact.'})
+
+    @mock.patch('django.contrib.auth.authenticate')
+    def test_get_contact(self, authenticate):
+        authenticate.return_value = self.user
+
+        # Case 1: Get the contact.
+        contact1 = factoryboy.ContactFactory(name='abc')
+        url = reverse('get-or-update-contact', args=[contact1.id])
+        response = self.client.get(
+            url,
+            content_type='application/json',
+            header={'HTTP_AUTHORIZATION': 'Basic ' + base64.b64encode(b'x@x.com:xyz123').decode(
+                "ascii")}
+        )
+        self.assertEqual(response.json(), {'id': contact1.id, 'name': 'abc', 'email': contact1.email})
+
+        # Case 2: Get contact with random id.
+        url = reverse('get-or-update-contact', args=[123123])
+        response = self.client.get(
+            url,
+            content_type='application/json',
+            header={'HTTP_AUTHORIZATION': 'Basic ' + base64.b64encode(b'x@x.com:xyz123').decode(
+                "ascii")}
+        )
+        self.assertEqual(response.json(), {})

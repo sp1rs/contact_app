@@ -27,11 +27,14 @@ def create_contact(request, **kwargs):
 
 
 @utils.basic_auth()
-def update_contact(request, **kwargs):
-    """Update contact."""
+def get_or_update_contact(request, **kwargs):
+    """Get or update contact based on method request."""
     contact_id = kwargs['id']
     contact = private.Contact()
-    if request.method.lower() == 'post':
+    if request.method.lower() == 'get':
+        data = contact.get_contact(contact_id)
+        return JsonResponse(data)
+    elif request.method.lower() == 'post':
         data = json.loads(request.body)
         try:
             contact.check_and_update(pk=contact_id, name=data.get('name'))

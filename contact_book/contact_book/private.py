@@ -12,6 +12,16 @@ class Contact(object):
     def __init__(self):
         super(Contact, self).__init__()
 
+    def get_contact(self, contact_id):
+        contact = models.Contact.objects.filter(id=contact_id).first()
+        if not contact:
+            return {}
+        return {
+            'id': contact.id,
+            'name': contact.name,
+            'email': contact.email
+        }
+
     def check_and_create(self, email, name, phone_number, code, number_type, image_url=None):
         """Check and create contact.
 
