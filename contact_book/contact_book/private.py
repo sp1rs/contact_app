@@ -75,6 +75,8 @@ class Contact(object):
         Note:
             Given a search_term, we will search the contact list in elasticsearch for both
             the fields i.e. `email` and `name`.
+            It's a prefix based search. So for example if the input is 'sha', it will give
+            `shashank`, `shasnktest` but not `abshasa`.
 
         """
         final_list = []
