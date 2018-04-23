@@ -9,6 +9,7 @@ from contact_book import models
 
 @receiver(post_save, sender=models.Contact)
 def send_contact_to_elasticsearch(sender, **kwargs):
+    """On creation of contact, update the elastic search data."""
     if not kwargs['created']:
         return
     contact = kwargs['instance']
