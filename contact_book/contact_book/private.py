@@ -65,11 +65,16 @@ class Contact(object):
         models.Contact.delete(pk)
 
     def fetch_list(self, limit, offset, search_term=''):
-        """Return list of paginated contacts.
+        """Return list of paginated contacts. If search term is present then fetch the list from
+        the elastic search else search from the db itself.
 
         Args:
             limit (int): Limit of records.
             offset (int): Limit to be starts with.
+
+        Note:
+            Given a search_term, we will search the contact list in elasticsearch for both
+            the fields i.e. `email` and `name`.
 
         """
         final_list = []
