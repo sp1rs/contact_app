@@ -24,5 +24,4 @@ urlpatterns = [
     url(r'^contact/(?P<id>\w+)/$', views.update_contact, name='update-contact'),
     url(r'^contact/$', views.create_contact, name='create-contact'),
     url(r'^contact/all$', views.list_contact, name='contact-list'),
-    url(r'^contact/login$', views.simple_login),
 ]
