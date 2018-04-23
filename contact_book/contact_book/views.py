@@ -45,6 +45,7 @@ def get_or_update_contact(request, **kwargs):
     return JsonResponse({'success_message': 'Contact updated successfully.'})
 
 
+@utils.basic_auth()
 def search_contact(request, **kwargs):
     """List contact given limit and offset."""
     limit = int(request.GET.get('limit', constants.DEFAULT_LIMIT))
