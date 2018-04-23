@@ -77,12 +77,7 @@ class ContactTest(TestCase):
         self.assertDictEqual(
             data[0],
             {
-                'numbers':
-                    [
-                        {'type': phone1.type, 'number': phone1.code + phone1.number},
-                        {'type': phone2.type, 'number': phone2.code + phone2.number}
-                    ],
-                'image_url': None,
+                'id': contact1.id,
                 'name': u'xyz',
                 'email': contact1.email
             }
@@ -90,11 +85,7 @@ class ContactTest(TestCase):
         self.assertDictEqual(
             data[1],
             {
-                'numbers':
-                    [
-                        {'type': phone3.type, 'number': phone3.code + phone3.number}
-                    ],
-                'image_url': None,
+                'id': contact2.id,
                 'name': u'xyz',
                 'email': contact2.email
             }
@@ -105,17 +96,12 @@ class ContactTest(TestCase):
             data,
             [
                 {
-                    'numbers':
-                        [
-                            {'type': phone3.type, 'number': phone3.code + phone3.number}
-                        ],
-                    'image_url': None,
+                    'id': contact2.id,
                     'name': u'xyz',
                     'email': contact2.email
                 },
                 {
-                    'numbers': [],
-                    'image_url': None,
+                    'id': contact3.id,
                     'name': u'xyz',
                     'email': contact3.email
                 }

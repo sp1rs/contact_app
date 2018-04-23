@@ -74,11 +74,5 @@ class Contact(BaseModel):
         return {
             'name': self.name,
             'email': self.email,
-            'image_url': self.image_url,
-            'numbers': [
-                {
-                    'number': number.code + number.number,
-                    'type': number.type
-                } for number in self.numbers.all()
-            ]
+            'id': self.pk
         }

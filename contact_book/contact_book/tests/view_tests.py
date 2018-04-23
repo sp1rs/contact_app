@@ -1,5 +1,6 @@
 import json
 import base64
+import mock
 
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
@@ -12,7 +13,7 @@ from contact_book.tests import factoryboy
 class ViewsTest(TestCase):
 
     def setUp(self):
-        self.user = User.objects.create_user(username='x@x.com', password='xyz123')
+        self.user = User.objects.create_user(username='x@x.com', password='xyz123', is_active=True)
 
     def test_create_contact_with_unauthenticated_user(self):
         url = reverse('create-contact')
@@ -26,9 +27,10 @@ class ViewsTest(TestCase):
         )
         self.assertEqual(response.status_code, 401)
 
-    def test_create_contact(self):
+    @mock.patch('django.contrib.auth.authenticate')
+    def test_create_contact(self, authenticate):
         url = reverse('create-contact')
-        self.client.login(username='x@x.com', password='xyz123')
+        authenticate.return_value = self.user
         response = self.client.post(
             url,
             data=json.dumps({
@@ -53,11 +55,15 @@ class ViewsTest(TestCase):
                 'email': 'abc@x.com', 'name': 'abc', 'phone_number': '1234567890',
                 'code': '+91', 'number_type': 'Home', 'image_url': 'http://xyz.com'
             }),
-            content_type='application/json'
+            content_type='application/json',
+            header={'HTTP_AUTHORIZATION': 'Basic ' + base64.b64encode(b'x@x.com:xyz123').decode("ascii")}
         )
         self.assertEqual(response.json(), {'error_message': 'Cannot add contact.'})
 
-    def test_update_contact(self):
+    @mock.patch('django.contrib.auth.authenticate')
+    def test_update_contact(self, authenticate):
+
+        authenticate.return_value = self.user
 
         # Case 1: Update the contact.
         contact1 = factoryboy.ContactFactory(name='abc')
@@ -74,13 +80,17 @@ class ViewsTest(TestCase):
         self.assertEqual(contacts[0].name, 'def')
 
         # Case 2: Delete the contact.
-        response = self.client.delete(url)
+        response = self.client.delete(
+            url,
+            header={'HTTP_AUTHORIZATION': 'Basic ' + base64.b64encode(b'x@x.com:xyz123').decode("ascii")}
+        )
         self.assertEqual(contacts.count(), 0)
         self.assertEqual(response.json(), {'success_message': 'Contact updated successfully.'})
 
         reverse('update-contact', args=[123123123])
         response = self.client.post(
-            url, data=json.dumps({'name': 'def'}), content_type='application/json'
+            url, data=json.dumps({'name': 'def'}), content_type='application/json',
+            header={'HTTP_AUTHORIZATION': 'Basic ' + base64.b64encode(b'x@x.com:xyz123').decode("ascii")}
         )
         self.assertEqual(contacts.count(), 0)
         self.assertEqual(response.json(), {'error_message': 'Cannot update contact.'})

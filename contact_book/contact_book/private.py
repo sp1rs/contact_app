@@ -1,8 +1,10 @@
 from django.db import IntegrityError
 from django.db import transaction
 
+from contact_book import constants
 from contact_book import exception
 from contact_book import models
+from contact_book import elastic_search
 
 
 class Contact(object):
@@ -62,7 +64,7 @@ class Contact(object):
         """
         models.Contact.delete(pk)
 
-    def fetch_list(self, limit, offset):
+    def fetch_list(self, limit, offset, search_term=''):
         """Return list of paginated contacts.
 
         Args:
@@ -71,11 +73,38 @@ class Contact(object):
 
         """
         final_list = []
-        contacts = models.Contact.objects.all()[offset:(offset + limit)]
-        # import ipdb; ipdb.set_trace()
-        for contact in contacts:
-            final_list.append(contact.to_json())
+
+        if search_term:
+            data = elastic_search.search(
+                constants.ELASTIC_SEARCH_INDEX,
+                body=self._get_query(search_term),
+                **{'from': offset, 'size': limit}
+            )
+            for contact in data['hits']['hits']:
+                final_list.append(contact['_source']['contact'])
+        else:
+            contacts = models.Contact.objects.all()[offset:(offset + limit)]
+            for contact in contacts:
+                final_list.append(contact.to_json())
         return final_list
+
+    def _get_query(self, search):
+        return {
+            'query': {
+                'nested':
+                    {
+                        'path': 'contact',
+                        'query': {
+                            'multi_match': {
+                                'query': search,
+                                'type': 'phrase_prefix',
+                                'fields': ['contact.name', 'contact.email']
+                            }
+                        }
+                    }
+                }
+            }
+
 
     def _can_create_contact(self, email):
         """Check if contact can be created or not.

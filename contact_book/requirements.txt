@@ -7,3 +7,5 @@ fake-factory==0.5.3
 enum==0.4.6
 mock==1.0.1
 marisa_trie==0.7.4
+elasticsearch>=5.0.0,<6.0.0
+django-test-without-migrations==0.6

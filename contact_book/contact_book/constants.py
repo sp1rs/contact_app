@@ -9,4 +9,8 @@ class PhoneNumberType(Enum):
     TYPE_HOME = 'home'
     TYPE_OFFICE = 'office'
 
+
 TRIE_FILE_PATH = './trie_search.marisa'
+
+ELASTIC_SEARCH_INDEX = 'contact_manager'
+ELASTIC_SEARCH_MAPPING = 'contact'

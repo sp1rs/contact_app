@@ -7,8 +7,10 @@ from django.shortcuts import render
 from contact_book import constants
 from contact_book import exception
 from contact_book import private
+from contact_book import utils
 
 
+@utils.basic_auth()
 def create_contact(request, **kwargs):
     """Create contact."""
     data = json.loads(request.body)
@@ -24,6 +26,7 @@ def create_contact(request, **kwargs):
     return JsonResponse({'success_message': 'Contact added successfully.'})
 
 
+@utils.basic_auth()
 def update_contact(request, **kwargs):
     """Update contact."""
     contact_id = kwargs['id']
@@ -39,10 +42,12 @@ def update_contact(request, **kwargs):
     return JsonResponse({'success_message': 'Contact updated successfully.'})
 
 
-def list_contact(request, **kwargs):
+@utils.basic_auth()
+def search_contact(request, **kwargs):
     """List contact given limit and offset."""
     limit = int(request.GET.get('limit'), constants.DEFAULT_LIMIT)
     offset = int(request.GET.get('limit'), constants.DEFAULT_OFFSET)
+    search_term = request.GET.get('search_term')
     contact = private.Contact()
-    data = contact.fetch_list(limit, offset)
+    data = contact.fetch_list(limit, offset, search_term)
     return JsonResponse({'objects': data})
